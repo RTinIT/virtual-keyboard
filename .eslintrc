@@ -1,0 +1,11 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "airbnb-base",
+    "rules": {
+        "no-plusplus": "off",
+        "eol-last": "off"
+    }
+}
