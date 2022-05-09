@@ -112,3 +112,121 @@ keyborad.addEventListener('click', (event) => {
     checkCharValue(event);
   }
 });
+
+keyborad.addEventListener('animationend', (event) => {
+  event.target.classList.remove('push');
+});
+
+const arrEn = [...keyContent.en[0], ...keyContent.en[1],
+  ...keyContent.en[2], ...keyContent.en[3], ...keyContent.en[4]];
+
+const arrRu = [...keyContent.ru[0], ...keyContent.ru[1],
+  ...keyContent.ru[2], ...keyContent.ru[3], ...keyContent.ru[4]];
+
+const searchLetter = (eventKey) => {
+  let indexKeyEn = 0;
+  let keyRu = '';
+  indexKeyEn = arrEn.findIndex((e) => e === `${eventKey}`);
+  keyRu = arrRu.find((e, i) => i === indexKeyEn);
+  return keyRu;
+};
+
+const checkLang = (event) => {
+  if (event.key.length < 2 && caps.classList.contains('ru') && caps.classList.contains('active')) {
+    let indexKeyEn = 0;
+    let keyRu = '';
+    indexKeyEn = arrEn.findIndex((e) => e === `${event.key}`.toLowerCase());
+    keyRu = arrRu.find((e, i) => i === indexKeyEn);
+    input.textContent += keyRu.toUpperCase();
+  } else if (keys[0].classList.contains('ru') && event.key.length < 2) {
+    input.textContent += searchLetter(event.key);
+  } else if (event.key.length < 2) {
+    input.textContent += event.key;
+  }
+};
+
+const chengeRegister = (event) => {
+  let newKey = event.key.toLowerCase();
+  const indexKeyEn = arrEn.findIndex((e) => e === `${newKey}`.toLowerCase());
+  if (caps.classList.contains('active')) {
+    newKey = arrRu.find((e, i) => i === indexKeyEn).toLowerCase();
+  } else {
+    newKey = arrRu.find((e, i) => i === indexKeyEn).toUpperCase();
+  }
+  return newKey;
+};
+
+const checkLangWithActive = (event) => {
+  let newKey = event.key.toLowerCase();
+  if (caps.classList.contains('ru')) {
+    const indexKeyEn = arrEn.findIndex((e) => e === `${newKey}`.toLowerCase());
+    newKey = arrRu.find((e, i) => i === indexKeyEn).toLowerCase();
+  }
+  return newKey;
+};
+
+const implementedAnimation = (event) => {
+  const keysArray = [...keys];
+  let pushedKey = '';
+
+  if (event.code === 'ControlLeft') {
+    pushedKey = keysArray.find((e) => e.textContent === 'Ctrl').classList.add('push');
+  } else if (event.code === 'ControlRight') {
+    pushedKey = document.getElementById('row_4_key_4').classList.add('push');
+  } else if (event.code === 'AltLeft') {
+    pushedKey = document.getElementById('row_4_key_1').classList.add('push');
+  } else if (event.code === 'AltRight') {
+    pushedKey = document.getElementById('row_4_key_3').classList.add('push');
+  } else if (event.code === 'ShiftLeft') {
+    pushedKey = document.getElementById('row_3_key_0').classList.add('push');
+  } else if (event.code === 'ShiftRight') {
+    pushedKey = document.getElementById('row_3_key_13').classList.add('push');
+  } else if (event.key === 'ArrowUp') {
+    pushedKey = keysArray.find((e) => e.textContent === 'ᐃ').classList.add('push');
+    input.textContent += 'ᐃ';
+  } else if (event.key === 'ArrowDown') {
+    pushedKey = keysArray.find((e) => e.textContent === 'ᐁ').classList.add('push');
+    input.textContent += 'ᐁ';
+  } else if (event.key === 'ArrowLeft') {
+    pushedKey = keysArray.find((e) => e.textContent === 'ᐊ').classList.add('push');
+    input.textContent += 'ᐊ';
+  } else if (event.key === 'ArrowRight') {
+    pushedKey = keysArray.find((e) => e.textContent === 'ᐅ').classList.add('push');
+    input.textContent += 'ᐅ';
+  } else if (keysArray.find((e) => e.dataset.keyname === event.key)) {
+    pushedKey = keysArray.find((e) => e.dataset.keyname === event.key).classList.add('push');
+  } else {
+    pushedKey = keysArray.find((e) => e.dataset.keyname.toUpperCase() === event.key);
+    pushedKey.classList.add('push');
+  }
+};
+
+document.addEventListener('keydown', (event) => {
+  implementedAnimation(event);
+  if (event.code === 'Backspace') {
+    input.textContent = input.textContent.substring(0, input.textContent.length - 1);
+  } else if (event.code === 'Enter') {
+    input.textContent += '\n';
+  } else if (event.ctrlKey && event.altKey) {
+    changeLang(event);
+  } else if (event.key.length < 2 && event.shiftKey
+    && caps.classList.contains('active')) {
+    input.textContent += checkLangWithActive(event);
+  } else if (event.key.length < 2 && event.shiftKey && caps.classList.contains('ru')) {
+    input.textContent += chengeRegister(event);
+  } else if (event.key.length < 2 && event.shiftKey) {
+    input.textContent += event.key.toUpperCase();
+  } else if (event.code === 'Tab') {
+    input.textContent += '\t';
+  } else if (event.code === 'CapsLock') {
+    caps.classList.toggle('active');
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i].dataset.keyname.length < 2) {
+        keys[i].classList.toggle('uppercase');
+      }
+    }
+  } else {
+    checkLang(event);
+  }
+  event.preventDefault();
+});

@@ -96,3 +96,33 @@ ion-icon {
   align-items: center;
   font-size: 18px;
 }
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.push {
+  border-radius: 20px;
+  background: rgba(19, 132, 19, 0.894);
+  animation-name: push-animation;
+  animation-duration: 0.5s;
+}
+
+.active {
+  background: rgba(19, 132, 19, 0.894);
+}
+
+@keyframes push-animation {
+  0% {
+    background: white;
+    border-radius: 5px;
+  }
+  50% {
+    background: rgba(19, 132, 19, 0.894);;
+    border-radius: 20px;
+  }
+  100% {
+    background: white;
+    border-radius: 5px;
+  }
+}
