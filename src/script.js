@@ -48,3 +48,67 @@ const createKey = (lang) => {
   }
 };
 createKey(keyContent.en);
+
+const keys = document.querySelectorAll('.key');
+for (let i = 0; i < keys.length; i++) {
+  keys[i].setAttribute('data-keyname', keys[i].textContent);
+  if (keys[i].dataset.keyname.length < 2) {
+    keys[i].setAttribute('data-upperkeyname', keys[i].textContent.toUpperCase());
+  } else {
+    keys[i].setAttribute('name', keys[i].textContent);
+  }
+}
+
+const checkUpperKeyName = (e) => {
+  if (e.target.dataset.upperkeyname) {
+    input.textContent += e.target.dataset.upperkeyname;
+  }
+};
+
+const checkCharValue = (e) => {
+  if (e.target.dataset.keyname.length < 2) {
+    input.textContent += e.target.textContent;
+  }
+};
+
+const changeLang = () => {
+  for (let i = 0; i < keys.length; i++) {
+    keys[i].classList.toggle('ru');
+    if (keys[i].classList.contains('ru')) {
+      keys[i].textContent = keys[i].dataset.ru;
+      input.setAttribute('lang', 'ru');
+    } else {
+      keys[i].textContent = keys[i].dataset.en;
+      input.setAttribute('lang', 'en');
+    }
+  }
+};
+
+const caps = document.getElementsByName('CapsLock')[0];
+
+keyborad.addEventListener('click', (event) => {
+  event.target.classList.add('push');
+
+  if (event.target.textContent === 'Backspace') {
+    input.textContent = input.textContent.substring(0, input.textContent.length - 1);
+  } else if (event.target.textContent === 'Enter') {
+    input.textContent += '\n';
+  } else if (event.target.textContent === 'Tab') {
+    input.textContent += '\t';
+  } else if (event.target.textContent === ' ') {
+    input.textContent += ' ';
+  } else if (event.target.textContent === 'CapsLock') {
+    caps.classList.toggle('active');
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i].dataset.keyname.length < 2) {
+        keys[i].classList.toggle('uppercase');
+      }
+    }
+  }
+
+  if (caps.classList.contains('active')) {
+    checkUpperKeyName(event);
+  } else {
+    checkCharValue(event);
+  }
+});
